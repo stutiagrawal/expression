@@ -37,20 +37,20 @@ def log_function_time(fn, analysis_id, cmd, logger=None):
     if logger != None:
         logger.info("%s_TIME\t%s\t%s" %(fn, analysis_id,  (end_time - start_time)/60.0))
 
-def download_from_cleversafe(logger, remote_input, local_output):
+def download_from_cleversafe(logger, remote_input, local_output, config='/home/ubuntu/.s3cfg_cleversafe'):
     """ Download a file from cleversafe to a local folder """
 
     if (remote_input != ""):
-        cmd = ['s3cmd', 'sync', remote_input, local_output]
+        cmd = ['s3cmd','-c', config, 'sync', remote_input, local_output]
         run_command(cmd, logger)
     else:
         raise Exception("invalid input %s" % remote_input)
 
-def upload_to_cleversafe(logger, remote_output, local_input):
+def upload_to_cleversafe(logger, remote_output, local_input, config='/home/ubuntu/.s3cfg_cleversafe'):
     """ Upload a file to cleversafe to a folder """
 
     if (remote_output != "" and (os.path.isfile(local_input) or os.path.isdir(local_input))):
-        cmd = ['s3cmd', 'sync', local_input, remote_output]
+        cmd = ['s3cmd', '-c', config, 'sync', local_input, remote_output]
         run_command(cmd, logger)
     else:
         raise Exception("invalid input %s or output %s" %(local_input, remote_output))

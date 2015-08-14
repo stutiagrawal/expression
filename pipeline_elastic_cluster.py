@@ -67,6 +67,9 @@ def download_missing_reference(args_input, remote_default, bucket):
         os.mkdir(path)
     pipelineUtil.download_from_cleversafe(None, os.path.join(bucket, remote_default), args_input)
 
+def download_from_alt_source(bucket, config, analysis_id, input_dir):
+    pipelineUtil.download_from_cleversafe(None, os.path.join(bucket, analysis_id), input_dir, config)
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(prog='pipeline.py', description='STAR and cufflinks')
@@ -94,7 +97,24 @@ if __name__ == "__main__":
     workdir = os.path.join(args.input_dir, analysis_id)
 
     if not os.path.isdir(workdir):
-        pipelineUtil.download_from_cleversafe(None, os.path.join(args.bucket, analysis_id), args.input_dir)
+        pipelineUtil.download_from_cleversafe(None, os.path.join(args.bucket, analysis_id), args.input_dir,
+                                              '/home/ubuntu/.s3cfg_cleversafe')
+
+    if not os.path.isdir(workdir):
+        download_from_alt_source('s3://tcga_cghub_protected', '/home/ubuntu/.s3cfg_cleversafe',
+                                analysis_id, args.input_dir)
+    if not os.path.isdir(workdir):
+        download_from_alt_source('s3://tcga_cghub_protected_2', '/home/ubuntu/.s3cfg_cleversafe',
+                                analysis_id, args.input_dir)
+    if not os.path.isdir(workdir):
+        download_from_alt_source('s3://tcga_cghub_protected_3', '/home/ubuntu/.s3cfg_cleversafe',
+                                analysis_id, args.input_dir)
+    if not os.path.isdir(workdir):
+        download_from_alt_source('s3://tcga_cghub_protected', '/home/ubuntu/.s3cfg_ceph',
+                                analysis_id, args.input_dir)
+
+    if not os.path.isdir(workdir):
+        raise Exception("Cannot locate analysis_id %s" %analysis_id)
 
     if not os.path.isdir(args.genome_dir):
         pipelineUtil.download_from_cleversafe(None, os.path.join(args.bucket, 'star_genome'), args.input_dir)
