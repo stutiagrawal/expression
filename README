@@ -1,0 +1,1 @@
+The programs in the icgc_rnaseq_align were originally developed by ICGC for RNA-seq alignment purposes. It is being used in this program in conjunction with cufflinks to get expression level data.
