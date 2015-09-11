@@ -66,19 +66,23 @@ def collect_metrics(sub_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='label_dataset.py')
     parser.add_argument('--dirname', default='/home/ubuntu/SCRATCH/lung_results')
+    parser.add_argument('--disease', help='disease to be labeled')
     args = parser.parse_args()
-    collect_metrics(args.dirname)
+    #collect_metrics(args.dirname)
 
-"""
+
     for filename in os.listdir(args.dirname):
         if filename.endswith('fpkm_tracking'):
             analysis_id = filename.split(".")[0]
-            metadata = extract_metadata(args.dirname, analysis_id, None)
-            print 'disease= %s' %metadata['disease']
+            #metadata = extract_metadata(args.dirname, analysis_id, None)
+            #print 'disease= %s' %metadata['disease']
+
+            cmd = ['mv', '%s' % os.path.join(args.dirname, filename), '%s' %os.path.join(args.dirname, args.disease, '%s_%s' %(args.disease, analysis_id))]
+            """
             print metadata
             if metadata['disease'] != "":
                 if not os.path.isdir(os.path.join(args.dirname, metadata['disease'])):
                     os.mkdir(os.path.join(args.dirname, metadata['disease']))
             cmd = ['mv', '%s' % os.path.join(args.dirname, filename), '%s' %os.path.join(args.dirname, metadata["disease"], '%s_%s' %(metadata['disease'], analysis_id))]
+            """
             pipelineUtil.log_function_time('mv', analysis_id, cmd, None)
-"""
