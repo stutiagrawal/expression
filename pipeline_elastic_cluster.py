@@ -99,7 +99,6 @@ if __name__ == "__main__":
     if not os.path.isdir(workdir):
         pipelineUtil.download_from_cleversafe(None, os.path.join(args.bucket, analysis_id), args.input_dir,
                                               '/home/ubuntu/.s3cfg_cleversafe')
-
     if not os.path.isdir(workdir):
         download_from_alt_source('s3://tcga_cghub_protected', '/home/ubuntu/.s3cfg_cleversafe',
                                 analysis_id, args.input_dir)
@@ -112,7 +111,6 @@ if __name__ == "__main__":
     if not os.path.isdir(workdir):
         download_from_alt_source('s3://tcga_cghub_protected', '/home/ubuntu/.s3cfg_ceph',
                                 analysis_id, args.input_dir)
-
     if not os.path.isdir(workdir):
         raise Exception("Cannot locate analysis_id %s" %analysis_id)
 

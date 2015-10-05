@@ -97,9 +97,9 @@ if __name__ == "__main__":
 
     workdir = os.path.join(args.input_dir, analysis_id)
 
-    #if not os.path.isdir(workdir):
-    #    pipelineUtil.download_from_cleversafe(None, os.path.join(args.bucket, analysis_id), args.input_dir,
-    #                                          '/home/ubuntu/.s3cfg_cleversafe')
+    if not os.path.isdir(workdir):
+        pipelineUtil.download_from_cleversafe(None, os.path.join(args.bucket, analysis_id), args.input_dir,
+                                              '/home/ubuntu/.s3cfg_cleversafe')
 
     if not os.path.isdir(workdir):
         download_from_alt_source('s3://tcga_cghub_protected', '/home/ubuntu/.s3cfg_cleversafe',
