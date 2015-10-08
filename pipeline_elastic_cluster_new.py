@@ -57,7 +57,7 @@ def run_pipeline(args, workdir, analysis_id, logger):
     cuffout_isoforms_remote = os.path.join(args.bucket, "cufflinks", "star_iso", args.disease, "%s.isoforms.fpkm_tracking" %analysis_id)
     pipelineUtil.upload_to_cleversafe(logger, cuffout_isoforms_remote, cuffout_isoforms_local)
 
-    pipelineUtil.remove_dir(star_output_dir)
+    #pipelineUtil.remove_dir(star_output_dir)
 
 
 def download_missing_reference(args_input, remote_default, bucket):
@@ -134,4 +134,4 @@ if __name__ == "__main__":
         run_pipeline(args, workdir, analysis_id, logger)
         star_log_out = os.path.join(args.bucket, 'logs', args.disease, '%s.log' %analysis_id)
         pipelineUtil.upload_to_cleversafe(logger,star_log_out, star_log_file)
-        pipelineUtil.remove_dir(workdir)
+        #pipelineUtil.remove_dir(workdir)
