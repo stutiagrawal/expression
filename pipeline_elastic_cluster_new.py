@@ -61,7 +61,7 @@ if __name__ == "__main__":
     star.add_argument('--star_pipeline', default='/home/ubuntu/expression/icgc_rnaseq/star_align.py',
                       help='path to star pipeline')
     star.add_argument('--input_dir', default='/home/ubuntu/SCRATCH', required=True, help='parent path for all datasets')
-    star.add_argument('--genome_fasta_file', type=str, help='path to reference genome', required=True
+    star.add_argument('--genome_fasta_file', type=str, help='path to reference genome', required=True,
                 default='/home/ubuntu/SCRATCH/GRCh38.d1.vd1.fa')
     star.add_argument('--quantMode', type=str, default="", help='enable transcriptome mapping in STAR')
 
