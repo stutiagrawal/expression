@@ -53,9 +53,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='pipeline.py', description='STAR and cufflinks')
     parser.add_argument('--analysis_id', required=True, default=None, type=str, help='analysis ids')
     parser.add_argument('--gtf', required=True, type=str, help='genome annotation file')
-    parser.add_argument('--bucket', type=str, help='path to remote bucket')
     parser.add_argument('--p', type=str, default=1, help='number of threads')
-    parser.add_argument('--disease', type=str, required=True, help='disease abbreviation')
 
     star = parser.add_argument_group("star pipeline")
     star.add_argument('--genome_dir', default='/home/ubuntu/SCRATCH/star_genome_d1_vd1_gtfv22/', required=True,
