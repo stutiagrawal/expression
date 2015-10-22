@@ -15,9 +15,11 @@ def retrieve_data(analysis_id, cghub_key, output_dir, logger=None):
 def run_command(cmd, logger=None):
     """ Run a subprocess command """
 
-    stdoutdata, stderrdata = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    #stdoutdata, stderrdata = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    child = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
+    stdoutdata, stderrdata = child.communicate()
+    exit_code = child.returncode
 
-    print stdoutdata, stderrdata
     if logger != None:
         stdoutdata = stdoutdata.split("\n")
         for line in stdoutdata:
@@ -27,21 +29,25 @@ def run_command(cmd, logger=None):
         for line in stderrdata:
             logger.info(line)
 
+    return exit_code
+
 def log_function_time(fn, analysis_id, cmd, logger=None):
     """ Log the time taken by a command to the logger """
 
     start_time = time.time()
-    run_command(cmd, logger)
+    exit_code = run_command(cmd, logger)
     end_time = time.time()
 
     if logger != None:
         logger.info("%s_TIME\t%s\t%s" %(fn, analysis_id,  (end_time - start_time)/60.0))
+    return exit_code
 
 def download_from_cleversafe(logger, remote_input, local_output, config='/home/ubuntu/.s3cfg_cleversafe'):
     """ Download a file from cleversafe to a local folder """
 
     if (remote_input != ""):
         cmd = ['s3cmd','-c', config, 'sync', remote_input, local_output]
+        print cmd
         run_command(cmd, logger)
     else:
         raise Exception("invalid input %s" % remote_input)
