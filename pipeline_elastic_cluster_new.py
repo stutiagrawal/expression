@@ -9,10 +9,7 @@ import post_alignment_qc
 def run_pipeline(args, workdir, analysis_id, fastq_dir, logger):
     """ align datasets using STAR and compute expression using cufflinks """
 
-    for filename in os.listdir(workdir):
-        if filename.endswith(".tar") or filename.endswith(".tar.gz"):
-            tar_file_in = os.path.join(workdir, filename)
-            break
+    tar_file_in = args.input_file
 
     qc_dir = os.path.join(workdir, 'qc')
     if not os.path.isdir(qc_dir):
@@ -100,16 +97,17 @@ if __name__ == "__main__":
                         help='path to picard binary')
     parser.add_argument('--ref_flat', required=True, type=str, default=None, help='path to refFlat file')
     parser.add_argument('--fastqc_path', type=str, default='/home/ubuntu/bin/FastQC/fastqc', help='path to fastqc binary')
+    parser.add_argument('--output_dir', type=str, default=os.getcwd())
+    parser.add_argument('--input_file', required=True, help='path to input file')
 
     star = parser.add_argument_group("star pipeline")
     star.add_argument('--genome_dir', default='/home/ubuntu/SCRATCH/star_genome_d1_vd1_gtfv22/', required=True,
                      help='star index directory')
     star.add_argument('--star_pipeline', default='/home/ubuntu/expression/icgc_rnaseq/star_align.py',
                       help='path to star pipeline')
-    star.add_argument('--input_dir', default='/home/ubuntu/SCRATCH', required=True, help='parent path for all datasets')
     star.add_argument('--genome_fasta_file', type=str, help='path to reference genome', required=True,
                 default='/home/ubuntu/SCRATCH/GRCh38.d1.vd1.fa')
-    star.add_argument('--quantMode', type=str, default="", help='enable transcriptome mapping in STAR')
+    star.add_argument('--quantMode', type=str, default="TranscriptomeSAM", help='enable transcriptome mapping in STAR')
 
     cufflinks = parser.add_argument_group("cufflinks pipeline")
     cufflinks.add_argument('--cufflinks_pipeline', type=str,
@@ -118,10 +116,13 @@ if __name__ == "__main__":
 
     analysis_id = args.analysis_id
 
-    workdir = os.path.join(args.input_dir, analysis_id)
+    workdir = args.output_dir
+
+    if not os.path.isfile(args.input_file):
+        raise Exception("Cannot locate input file %s. Please make sure it is present in the correct path." %args.input_file)
 
     if not os.path.isdir(workdir):
-        raise Exception("Cannot locate analysis_id %s" %analysis_id)
+        raise Exception("Cannot locate output directory %s, please create one if not present" %workdir)
 
     if not os.path.isdir(args.genome_dir):
         raise Exception("Cannot locate STAR genome build: %s" %args.genome_dir)
@@ -133,7 +134,7 @@ if __name__ == "__main__":
         raise Exception("Cannot locate GTF file: %s" %args.gtf)
 
     if os.path.isdir(workdir):
-        star_log_file = "%s_star.log" %(os.path.join(args.input_dir, analysis_id, analysis_id))
+        star_log_file = "%s_star.log" %(os.path.join(workdir, analysis_id))
         logger = setupLog.setup_logging(logging.INFO, analysis_id, star_log_file)
         fastq_dir = os.path.join(workdir, '%s_fastq_files' %analysis_id)
         if not os.path.isdir(fastq_dir):
